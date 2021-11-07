@@ -32,6 +32,7 @@ export enum UIFeature {
     Communities = "UIFeature.communities",
     AdvancedSettings = "UIFeature.advancedSettings",
     RoomHistorySettings = "UIFeature.roomHistorySettings",
+    AllowAutoPassword = "custom.allowAutoPassword",
 }
 
 export enum UIComponent {

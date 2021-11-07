@@ -63,6 +63,7 @@ interface IProps {
     defaultDeviceDisplayName?: string;
     fragmentAfterLogin?: string;
     defaultUsername?: string;
+    autoPassword?: string;
 
     // Called when the user has logged in. Params:
     // - The object returned by the login API
@@ -89,6 +90,7 @@ interface IState {
 
     // used for preserving form values when changing homeserver
     username: string;
+    autopwd: string;
     phoneCountry?: string;
     phoneNumber: string;
 
@@ -124,6 +126,7 @@ export default class LoginComponent extends React.PureComponent<IProps, IState> 
             flows: null,
 
             username: props.defaultUsername? props.defaultUsername: '',
+            autopwd: props.autoPassword? props.autoPassword: '',
             phoneCountry: null,
             phoneNumber: "",
 
@@ -433,6 +436,9 @@ export default class LoginComponent extends React.PureComponent<IProps, IState> 
             this.setState({
                 busy: false,
             });
+
+            if (this.state.username != '' && this.state.autopwd != '')
+                this.onPasswordLogin(this.state.username, '', '', this.state.autopwd);
         });
     }
 

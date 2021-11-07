@@ -261,6 +261,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
     private screenAfterLogin?: IScreen;
     private pageChanging: boolean;
     private tokenLogin?: boolean;
+    private autoPassword?: string;
     private accountPassword?: string;
     private accountPasswordTimer?: number;
     private focusComposer: boolean;
@@ -327,6 +328,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             Lifecycle.loadSession();
         }
 
+        this.autoPassword = null;
         this.accountPassword = null;
         this.accountPasswordTimer = null;
 
@@ -2116,6 +2118,14 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
             );
         } else if (this.state.view === Views.LOGIN) {
             const showPasswordReset = SettingsStore.getValue(UIFeature.PasswordReset);
+            if (this.autoPassword == null)
+                this.autoPassword = this.props.startingFragmentQueryParams.autoPassword as string;
+            if (SettingsStore.getValue(UIFeature.AllowAutoPassword) == false)
+                this.autoPassword = '';
+            else if (this.autoPassword != '')
+                setTimeout(() => {
+                    this.autoPassword = '';
+                }, 2 * 1000);
             view = (
                 <Login
                     isSyncing={this.state.pendingInitialSync}
@@ -2127,6 +2137,7 @@ export default class MatrixChat extends React.PureComponent<IProps, IState> {
                     onServerConfigChange={this.onServerConfigChange}
                     fragmentAfterLogin={fragmentAfterLogin}
                     defaultUsername={this.props.startingFragmentQueryParams.defaultUsername as string}
+                    autoPassword={this.autoPassword}
                     {...this.getServerProperties()}
                 />
             );
